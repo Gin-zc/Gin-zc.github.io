@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Next设置背景与文本框的透明度</title>
+    <url>/2023/03/27/17-53-08/</url>
+    <content><![CDATA[<h2 id="设置Hexo背景"><a href="#设置Hexo背景" class="headerlink" title="设置Hexo背景"></a>设置Hexo背景</h2><p>找到next主题下面的source&#x2F;css&#x2F;_schemes&#x2F;Mist&#x2F;index.styl，添加如下代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">body &#123; </span><br><span class="line">    background:url(/uploads/1.png);</span><br><span class="line">    background-repeat: no-repeat;</span><br><span class="line">    background-attachment:fixed; //不重复</span><br><span class="line">    background-size: cover;      //填充</span><br><span class="line">    background-position:100% 100%;</span><br><span class="line">&#125;       </span><br></pre></td></tr></table></figure>
+<h2 id="设置文本框的透明度"><a href="#设置文本框的透明度" class="headerlink" title="设置文本框的透明度"></a>设置文本框的透明度</h2><p>可以再添加如下代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.post-block &#123;</span><br><span class="line">  background: rgba(255,255,255,.85) none repeat scroll !important;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>rgba的第四个参数是控制透明度，其余控制文章背景的颜色。</em></p>
+<p>其余美化参考这篇<a href="https://blog.csdn.net/lyshark_csdn/article/details/124939308?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-124939308-blog-93797964.235%5Ev27%5Epc_relevant_default&spm=1001.2101.3001.4242.1&utm_relevant_index=3">博客</a></p>
+]]></content>
+      <categories>
+        <category>Hexo配置</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Contrastive Learning</title>
+    <url>/2023/03/29/04-23-43/</url>
+    <content><![CDATA[<h1 id="对比学习（学习笔记）"><a href="#对比学习（学习笔记）" class="headerlink" title="对比学习（学习笔记）"></a>对比学习（学习笔记）</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>NLP领域的Bert模型，对于这波图像领域的对比学习热潮，是具有启发和推动作用的。我们知道，Bert预训练模型，通过MLM任务的自监督学习，充分挖掘了模型从海量无标注文本中学习通用知识的能力。而图像领域的预训练，往往是有监督的，就是用ImageNet来进行预训练，但是在下游任务中Fine-tuning的效果，跟Bert在NLP下游任务中带来的性能提升，是没法比的。</p>
+<span id="more"></span>
+
+<p>因此，对比学习的出现就是要干NLP领域类似Bert预训练的事情，通过自监督学习，不依赖标注数据，要从无标注图像中自己学习知识。图像领域里的自监督可以分为两种类型：生成式自监督学习，判别式自监督学习。对比学习则是典型的判别式自监督学习，相对生成式自监督学习，对比学习的任务难度要低一些。</p>
+<p>现有方法基本上可以划分为：基于负例的对比学习方法、基于对比聚类的方法、基于不对称网络结构的方法，以及基于冗余消除损失函数的方法。</p>
+]]></content>
+      <categories>
+        <category>深度学习</category>
+        <category>对比学习</category>
+      </categories>
+      <tags>
+        <tag>Contrastive Learning</tag>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Typora里插入图片(并在Hexo本地能显示)</title>
+    <url>/2023/03/28/20-45-40/</url>
+    <content><![CDATA[<h2 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h2><p><img src="/2023/03/28/20-45-40/image-20230328210953868.png" alt="image-20230328210953868"></p>
+<span id="more"></span>
+
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><h3 id="先下载Typora并配置偏好设置"><a href="#先下载Typora并配置偏好设置" class="headerlink" title="先下载Typora并配置偏好设置"></a>先下载Typora并配置偏好设置</h3><img src="/2023/03/28/20-45-40/image-20230328211235474.png" alt="image-20230328211235474" style="zoom:50%;">
+
+<h3 id="并且在博客根目录下安装-hexo-asset-image"><a href="#并且在博客根目录下安装-hexo-asset-image" class="headerlink" title="并且在博客根目录下安装 hexo-asset-image"></a>并且在博客根目录下安装 <code>hexo-asset-image</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install https://github.com/CodeFalling/hexo-asset-image --save</span><br></pre></td></tr></table></figure>
+
+<p>修改 <code>_config.yml</code>中 <code>post_asset_folder</code>设置为<code>true</code></p>
+<p>此后每 <code>hexo new page</code>都会产生一个同名的文件夹，用于存放图片。</p>
+<h3 id="安装插件-hexo-renderer-marked"><a href="#安装插件-hexo-renderer-marked" class="headerlink" title="安装插件 hexo-renderer-marked"></a>安装插件 <code>hexo-renderer-marked</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-marked --save</span><br></pre></td></tr></table></figure>
+
+<p>并且在<code>_config.yml</code>中加入如下设置：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">marked:</span><br><span class="line">  prependRoot: true</span><br><span class="line">  postAsset: true</span><br></pre></td></tr></table></figure>
+
+<h3 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h3><p>之后在哪复制的或者截图的就可以直接粘贴进Typora了</p>
+]]></content>
+      <categories>
+        <category>Hexo配置</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2023/03/27/15-38-50/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+</search>

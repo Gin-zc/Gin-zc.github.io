@@ -17,19 +17,21 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"gin-zc.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"gin-zc.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
   </script>
 
-  <meta name="description" content="对比学习（学习笔记）背景NLP领域的Bert模型，对于这波图像领域的对比学习热潮，是具有启发和推动作用的。我们知道，Bert预训练模型，通过MLM任务的自监督学习，充分挖掘了模型从海量无标注文本中学习通用知识的能力。而图像领域的预训练，往往是有监督的，就是用ImageNet来进行预训练，但是在下游任务中Fine-tuning的效果，跟Bert在NLP下游任务中带来的性能提升，是没法比的。 因此，对">
+  <meta name="description" content="对比学习（学习笔记）背景NLP领域的Bert模型，对于这波图像领域的对比学习热潮，是具有启发和推动作用的。我们知道，Bert预训练模型，通过MLM任务的自监督学习，充分挖掘了模型从海量无标注文本中学习通用知识的能力。而图像领域的预训练，往往是有监督的，就是用ImageNet来进行预训练，但是在下游任务中Fine-tuning的效果，跟Bert在NLP下游任务中带来的性能提升，是没法比的。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Contrastive Learning">
 <meta property="og:url" content="https://gin-zc.github.io/2023/03/29/04-23-43/index.html">
 <meta property="og:site_name" content="GIN">
-<meta property="og:description" content="对比学习（学习笔记）背景NLP领域的Bert模型，对于这波图像领域的对比学习热潮，是具有启发和推动作用的。我们知道，Bert预训练模型，通过MLM任务的自监督学习，充分挖掘了模型从海量无标注文本中学习通用知识的能力。而图像领域的预训练，往往是有监督的，就是用ImageNet来进行预训练，但是在下游任务中Fine-tuning的效果，跟Bert在NLP下游任务中带来的性能提升，是没法比的。 因此，对">
+<meta property="og:description" content="对比学习（学习笔记）背景NLP领域的Bert模型，对于这波图像领域的对比学习热潮，是具有启发和推动作用的。我们知道，Bert预训练模型，通过MLM任务的自监督学习，充分挖掘了模型从海量无标注文本中学习通用知识的能力。而图像领域的预训练，往往是有监督的，就是用ImageNet来进行预训练，但是在下游任务中Fine-tuning的效果，跟Bert在NLP下游任务中带来的性能提升，是没法比的。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-03-28T20:23:43.000Z">
-<meta property="article:modified_time" content="2023-03-28T20:31:01.184Z">
-<meta property="article:author" content="张弛">
+<meta property="article:modified_time" content="2023-03-29T09:32:10.773Z">
+<meta property="article:author" content="GIN">
+<meta property="article:tag" content="Contrastive Learning">
+<meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://gin-zc.github.io/2023/03/29/04-23-43/">
@@ -103,6 +105,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -117,16 +120,53 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-        <li class="menu-item menu-item-archives">
+        <li class="menu-item menu-item-tags">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">3</span></a>
 
   </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">3</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">4</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -155,9 +195,9 @@
     <link itemprop="mainEntityOfPage" href="https://gin-zc.github.io/2023/03/29/04-23-43/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="张弛">
-      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="GIN">
+      <meta itemprop="description" content="USTC在读研究生">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -176,7 +216,20 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-03-29 04:23:43 / 修改时间：04:31:01" itemprop="dateCreated datePublished" datetime="2023-03-29T04:23:43+08:00">2023-03-29</time>
+              <time title="创建时间：2023-03-29 04:23:43 / 修改时间：17:32:10" itemprop="dateCreated datePublished" datetime="2023-03-29T04:23:43+08:00">2023-03-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">对比学习</span></a>
+                </span>
             </span>
 
           
@@ -191,6 +244,8 @@
 
       
         <h1 id="对比学习（学习笔记）"><a href="#对比学习（学习笔记）" class="headerlink" title="对比学习（学习笔记）"></a>对比学习（学习笔记）</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>NLP领域的Bert模型，对于这波图像领域的对比学习热潮，是具有启发和推动作用的。我们知道，Bert预训练模型，通过MLM任务的自监督学习，充分挖掘了模型从海量无标注文本中学习通用知识的能力。而图像领域的预训练，往往是有监督的，就是用ImageNet来进行预训练，但是在下游任务中Fine-tuning的效果，跟Bert在NLP下游任务中带来的性能提升，是没法比的。</p>
+<span id="more"></span>
+
 <p>因此，对比学习的出现就是要干NLP领域类似Bert预训练的事情，通过自监督学习，不依赖标注数据，要从无标注图像中自己学习知识。图像领域里的自监督可以分为两种类型：生成式自监督学习，判别式自监督学习。对比学习则是典型的判别式自监督学习，相对生成式自监督学习，对比学习的任务难度要低一些。</p>
 <p>现有方法基本上可以划分为：基于负例的对比学习方法、基于对比聚类的方法、基于不对称网络结构的方法，以及基于冗余消除损失函数的方法。</p>
 
@@ -201,6 +256,10 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Contrastive-Learning/" rel="tag"># Contrastive Learning</a>
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+          </div>
 
         
 
@@ -276,8 +335,10 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">张弛</p>
-  <div class="site-description" itemprop="description"></div>
+    <img class="site-author-image" itemprop="image" alt="GIN"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">GIN</p>
+  <div class="site-description" itemprop="description">USTC在读研究生</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
@@ -288,8 +349,28 @@
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Gin-zc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Gin-zc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:czhang_10@mail.ustc.edu.cn" title="E-Mail → mailto:czhang_10@mail.ustc.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
 
 
 
@@ -313,13 +394,15 @@
   
   &copy; 
   <span itemprop="copyrightYear">2023</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
+  <span class="with-love" id="heart">
+    <i class="fa fa-heartbeat" aria-hidden="true"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">张弛</span>
+  <span class="author" itemprop="copyrightHolder">GIN</span>
 </div>
+<!--
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
+-->
 
         
 
@@ -358,6 +441,10 @@
 
 
 
+  
+<script src="/js/local-search.js"></script>
+
+
 
 
 
@@ -370,6 +457,61 @@
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
