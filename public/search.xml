@@ -19,6 +19,26 @@
       </tags>
   </entry>
   <entry>
+    <title>衡量相似性的方法</title>
+    <url>/2023/03/30/00-46-40/</url>
+    <content><![CDATA[<h2 id="相似性"><a href="#相似性" class="headerlink" title="相似性"></a>相似性</h2><p>对于深度学习的各种任务，我们常常需要最小化模型输出与真实标签之间的距离，我们往往采用均方误差，交叉熵等作为损失函数，换句话说，不管是拉近它们分布之间的距离，还是什么，都是在使它们这两个张量更为相似。因此我们任何能衡量两组数据的相似性的方法都可以作为损失函数。这里总结一下各种计算相似度的方法。</p>
+<h3 id="余弦相似度"><a href="#余弦相似度" class="headerlink" title="余弦相似度"></a>余弦相似度</h3><blockquote>
+<p><strong>余弦相似性</strong>通过测量两个<a href="https://baike.baidu.com/item/%E5%90%91%E9%87%8F?fromModule=lemma_inlink">向量</a>的夹角的<a href="https://baike.baidu.com/item/%E4%BD%99%E5%BC%A6?fromModule=lemma_inlink">余弦</a>值来度量它们之间的相似性。0度角的余弦值是1，而其他任何角度的余弦值都不大于1；并且其最小值是-1。从而两个向量之间的角度的余弦值确定两个向量是否大致指向相同的方向。两个向量有相同的指向时，余弦相似度的值为1；两个向量夹角为90°时，余弦相似度的值为0；两个向量指向完全相反的方向时，余弦相似度的值为-1。这结果是与向量的长度无关的，仅仅与向量的指向方向相关。</p>
+</blockquote>
+<h4 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h4><p>两个向量间的余弦值可以通过使用欧几里得点积公式求出：</p>
+<img src="/2023/03/30/00-46-40/image-20230330005905251.png" alt="image-20230330005905251" style="zoom:50%;">
+
+<p>给定两个属性向量，<em>A</em>和<em>B</em>，其余弦相似性<em>θ</em>由点积和向量长度计算出：</p>
+<img src="/2023/03/30/00-46-40/image-20230330005954209.png" alt="image-20230330005954209" style="zoom:50%;">
+]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Next设置背景与文本框的透明度</title>
     <url>/2023/03/27/17-53-08/</url>
     <content><![CDATA[<h2 id="设置Hexo背景"><a href="#设置Hexo背景" class="headerlink" title="设置Hexo背景"></a>设置Hexo背景</h2><p>找到next主题下面的source&#x2F;css&#x2F;_schemes&#x2F;Mist&#x2F;index.styl，添加如下代码：</p>

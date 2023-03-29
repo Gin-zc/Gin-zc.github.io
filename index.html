@@ -129,12 +129,12 @@
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">3</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">4</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">5</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -193,6 +193,82 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gin-zc.github.io/2023/03/30/00-46-40/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="GIN">
+      <meta itemprop="description" content="USTC在读研究生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GIN">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/03/30/00-46-40/" class="post-title-link" itemprop="url">衡量相似性的方法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-03-30 00:46:40 / 修改时间：00:59:59" itemprop="dateCreated datePublished" datetime="2023-03-30T00:46:40+08:00">2023-03-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="相似性"><a href="#相似性" class="headerlink" title="相似性"></a>相似性</h2><p>对于深度学习的各种任务，我们常常需要最小化模型输出与真实标签之间的距离，我们往往采用均方误差，交叉熵等作为损失函数，换句话说，不管是拉近它们分布之间的距离，还是什么，都是在使它们这两个张量更为相似。因此我们任何能衡量两组数据的相似性的方法都可以作为损失函数。这里总结一下各种计算相似度的方法。</p>
+<h3 id="余弦相似度"><a href="#余弦相似度" class="headerlink" title="余弦相似度"></a>余弦相似度</h3><blockquote>
+<p><strong>余弦相似性</strong>通过测量两个<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%90%91%E9%87%8F?fromModule=lemma_inlink">向量</a>的夹角的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BD%99%E5%BC%A6?fromModule=lemma_inlink">余弦</a>值来度量它们之间的相似性。0度角的余弦值是1，而其他任何角度的余弦值都不大于1；并且其最小值是-1。从而两个向量之间的角度的余弦值确定两个向量是否大致指向相同的方向。两个向量有相同的指向时，余弦相似度的值为1；两个向量夹角为90°时，余弦相似度的值为0；两个向量指向完全相反的方向时，余弦相似度的值为-1。这结果是与向量的长度无关的，仅仅与向量的指向方向相关。</p>
+</blockquote>
+<h4 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h4><p>两个向量间的余弦值可以通过使用欧几里得点积公式求出：</p>
+<img src="/2023/03/30/00-46-40/image-20230330005905251.png" alt="image-20230330005905251" style="zoom:50%;">
+
+<p>给定两个属性向量，<em>A</em>和<em>B</em>，其余弦相似性<em>θ</em>由点积和向量长度计算出：</p>
+<img src="/2023/03/30/00-46-40/image-20230330005954209.png" alt="image-20230330005954209" style="zoom:50%;">
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://gin-zc.github.io/2023/03/29/04-23-43/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -216,10 +292,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-03-29 04:23:43 / 修改时间：17:32:10" itemprop="dateCreated datePublished" datetime="2023-03-29T04:23:43+08:00">2023-03-29</time>
+              <time title="创建时间：2023-03-29 04:23:43" itemprop="dateCreated datePublished" datetime="2023-03-29T04:23:43+08:00">2023-03-29</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-30 00:43:51" itemprop="dateModified" datetime="2023-03-30T00:43:51+08:00">2023-03-30</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -573,14 +655,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
