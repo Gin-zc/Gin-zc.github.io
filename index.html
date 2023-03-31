@@ -283,7 +283,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-04-01 00:52:07" itemprop="dateModified" datetime="2023-04-01T00:52:07+08:00">2023-04-01</time>
+                <time title="修改时间：2023-04-01 02:02:55" itemprop="dateModified" datetime="2023-04-01T02:02:55+08:00">2023-04-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -320,37 +320,15 @@
 
             <i class="fa fa-quote-right"></i>
           </blockquote>
-<h3 id="Denoising-Diffusion-Probabilistic-Model"><a href="#Denoising-Diffusion-Probabilistic-Model" class="headerlink" title="Denoising Diffusion Probabilistic Model"></a>Denoising Diffusion Probabilistic Model</h3><h4 id="前向过程："><a href="#前向过程：" class="headerlink" title="前向过程："></a>前向过程：<img src="/2023/03/31/15-23-50/image-20230331160559333.png" alt="image-20230331160559333" style="zoom:50%;"></h4><p>通过从原始数据分布 $x_0 \sim q(x_0) $ 不断加高斯噪声，根据马尔可夫链的性质，在T趋于∞的时候可以使其成为一个平稳分布（标准高斯分布） $x_T \sim \varphi(x)$即 $X \sim N(0,1)$ ，加噪的方差(可以理解为噪声的尺度)由 $\beta_t$控制,且随时间步T变化而变化。</p>
-<p>每个时刻加噪后的分布可以表示为 $q(\mathbf{x}_{t}|\mathbf{x}_{t-1}) := \mathcal{N}(\mathbf{x}:\sqrt{1-\beta_t}\mathbf{x}_{t-1}),\beta_tI) $，整个扩散过程可以表示为：$q\left(\mathbf{x}_{1: T} \mid \mathbf{x}_{0}\right):=\prod_{t=1}^{T} q\left(\mathbf{x}_{t} \mid \mathbf{x}_{t-1}\right)$。但一步一步加噪是否可以优化，考虑是否可以一步到位，于是便可以根据正态分布的可加性继续推导，用每一个时刻的上一时刻展开表示，其中做一个表示上的代换（ $\alpha_t = 1-\beta_t$ ），最后可以发现规律:</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-\mathbf{x}_{t} & =\sqrt{\alpha_{t}} \mathbf{x}_{t-1}+\sqrt{1-\alpha_{t}} \epsilon_{t-1} \\
-& =\sqrt{\alpha_{t}}\left(\sqrt{\alpha_{t-1}} \mathbf{x}_{t-2}+\sqrt{1-\alpha_{t-1}} \epsilon_{t-2}\right)+\sqrt{1-\alpha_{t}} \epsilon_{t-1} \\
-& =\sqrt{\alpha_{t} \alpha_{t-1}} \mathbf{x}_{t-2}+\sqrt{ {\sqrt{\alpha_{t}-\alpha_{t} \alpha_{t-1}}}^{2}+{\sqrt{1-\alpha_{t}}}^{2}} \bar{\epsilon}_{t-2} \\
-& =\sqrt{\alpha_{t} \alpha_{t-1}} \mathbf{x}_{t-2}+\sqrt{1-\alpha_{t} \alpha_{t-1}} \bar{\epsilon}_{t-2} \\
-& =\ldots \\
-& =\sqrt{\bar{\alpha}_{t}} \mathbf{x}_{0}+\sqrt{1-\bar{\alpha}_{t}} \epsilon
-\end{aligned}</script><p>即 $q\left(\mathbf{x}_{t} \mid \mathbf{x}_{0}\right)=\mathcal{N}\left(\mathbf{x}_{t} ; \sqrt{\bar{\alpha}_{t}} \mathbf{x}_{0},\left(1-\bar{\alpha}_{t}\right) \mathbf{I}\right)$ ，从而我们可以一步生成任意时刻的图像：</p>
-<p><img src="/2023/03/31/15-23-50/image-20230331164416748.png" alt="image-20230331164416748" style="zoom:50%;"></p>
-<p>生成 $\mathbf{x}_{t}$的过程我们可以利用<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/542478018">重参数化</a>技巧得到。</p>
-<h4 id="逆向过程："><a href="#逆向过程：" class="headerlink" title="逆向过程："></a>逆向过程：<img src="/2023/03/31/15-23-50/image-20230331230650193.png" alt="image-20230331230650193" style="zoom:50%;"></h4><p>逆向是一个去噪的过程，从一个随机高斯噪声开始，一步一步生成原始高清的图片，反向过程也定义为一个马尔可夫过程，要求 $t=0$时刻的数据，即要求 $p_\theta (\mathbf{x}_{0:T}) = p\left(\mathbf{x}_{T}\right) \prod_{t=1}^{T} p_{\theta}\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}\right)$，但这里是 $p_{\theta}\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}\right)$ 我们是无从得知。</p>
-<p>这里我们利用贝叶斯公式进行一个展开：</p>
-<script type="math/tex; mode=display">
-p_{\theta}\left(\mathbf{x}_{t-1}\mid\mathbf{x}_{t},\mathbf{x}_{0}\right) = q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}, \mathbf{x}_{0}\right)=q\left(\mathbf{x}_{t} \mid \mathbf{x}_{t-1}, \mathbf{x}_{0}\right) \frac{q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{0}\right)}{q\left(\mathbf{x}_{t} \mid \mathbf{x}_{0}\right)}</script><p>带入正态分布的概率密度函数，展开并配方：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}, \mathbf{x}_{0}\right) & =q\left(\mathbf{x}_{t} \mid \mathbf{x}_{t-1}, \mathbf{x}_{0}\right) \frac{q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{0}\right)}{q\left(\mathbf{x}_{t} \mid \mathbf{x}_{0}\right)} \\
-& \propto \exp \left(-\frac{1}{2}\left(\frac{\left(\mathbf{x}_{t}-\sqrt{\alpha_{t}} \mathbf{x}_{t-1}\right)^{2}}{\beta_{t}}+\frac{\left(\mathbf{x}_{t-1}-\sqrt{\bar{\alpha}_{t-1}} \mathbf{x}_{0}\right)^{2}}{1-\bar{\alpha}_{t-1}}\right.\right.\left.\left.-\frac{\left(\mathbf{x}_{t}-\sqrt{\bar{\alpha}_{t}} \mathbf{x}_{0}\right)^{2}}{1-\bar{\alpha}_{t}}\right)\right) \\
-&=\exp \left(-\frac{1}{2}\left(\left(\frac{\alpha_{t}}{\beta_{t}}+\frac{1}{1-\bar{\alpha}_{t-1}}\right) \mathbf{x}_{t-1}^{2}-\left(\frac{2 \sqrt{\alpha_{t}}}{\beta_{t}} \mathbf{x}_{t}+\frac{2 \sqrt{\bar{\alpha}_{t-1}}}{1-\bar{\alpha}_{t-1}} \mathbf{x}_{0}\right) \mathbf{x}_{t-1}\right.\right.\left.\left.+C\left(\mathbf{x}_{t}, \mathbf{x}_{0}\right)\right)\right)
-
-\end{aligned}</script><p>配方后可以用一个新的分布表示:          $ q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}, \mathbf{x}_{0}\right) ～ \mathcal{N}(\mathbf{x}_{t-1};\tilde{\mathbf{\mu}} (\mathbf{x}_t,\mathbf{x}_{0}),\tilde{\beta_t}I)$</p>
-<p>其中：</p>
-<p>其中方差可以看出是一个定值，而均值和 $\mathbf{x}_t$、$\mathbf{x}_0$有关，$\mathbf{x}_t$是已知输入，$\mathbf{x}_0$可以由前向过程一步加噪的式子变换后表示。</p>
-<p>这里我们如果我们有这个均值和方差，便可以根据这两个参数从正态分布中采样出一个数据，即得到 $\mathbf{x}_{t-1}$。但是我们没有噪声 $\tilde{z}$的信息，现在可以考虑用一个神经网络去学习这个$\tilde{z}$的信息，也可以直接学习均值的信息（但论文表明直接预测均值效果不好）。于是考虑用一个conditional的Unet去预测，$\tilde{z} = U net(\mathbf{x}_t,t)$，之后便可以从$\mathbf{x}_t$预测得到$\tilde{z}$，进而计算$\mathbf{x}_{t-1}$，直到$\mathbf{x}_0$</p>
-<p>。        <img src="/2023/03/31/15-23-50/image-20230401004805214.png" alt="image-20230401004805214" style="zoom:50%;"></p>
-<h4 id="训练过程："><a href="#训练过程：" class="headerlink" title="训练过程："></a>训练过程：</h4><p><img src="/2023/03/31/15-23-50/image-20230401005008193.png" alt="image-20230401005008193" style="zoom:50%;"></p>
-<h4 id="采样过程："><a href="#采样过程：" class="headerlink" title="采样过程："></a>采样过程：</h4><p><img src="/2023/03/31/15-23-50/image-20230401005051290.png" alt="image-20230401005051290" style="zoom:50%;"></p>
-
+<h3 id="Denoising-Diffusion-Probabilistic-Model"><a href="#Denoising-Diffusion-Probabilistic-Model" class="headerlink" title="Denoising Diffusion Probabilistic Model"></a>Denoising Diffusion Probabilistic Model</h3><h4 id="前向过程："><a href="#前向过程：" class="headerlink" title="前向过程："></a>前向过程：<img src="/2023/03/31/15-23-50/image-20230331160559333.png" alt="image-20230331160559333" style="zoom:50%;"></h4><p>通过从原始数据分布 $\mathbf{x}_0 \sim q(\mathbf{x}_0) $ 不断加高斯噪声，根据马尔可夫链的性质，在T趋于∞的时候可以使其成为一个平稳分布（标准高斯分布） $\mathbf{x}_T \sim \varphi(\mathbf{x})$即 $X \sim N(0,1)$ ，加噪的方差(可以理解为噪声的尺度)由 $\beta_t$控制,调节上一时刻的数据和加入噪声的比例，且随时间步T变化而变化。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/03/31/15-23-50/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
