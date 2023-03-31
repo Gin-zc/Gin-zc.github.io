@@ -5,7 +5,6 @@
     <url>/2023/03/29/04-23-43/</url>
     <content><![CDATA[<h1 id="对比学习（学习笔记）"><a href="#对比学习（学习笔记）" class="headerlink" title="对比学习（学习笔记）"></a>对比学习（学习笔记）</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>NLP领域的Bert模型，对于这波图像领域的对比学习热潮，是具有启发和推动作用的。我们知道，Bert预训练模型，通过MLM任务的自监督学习，充分挖掘了模型从海量无标注文本中学习通用知识的能力。而图像领域的预训练，往往是有监督的，就是用ImageNet来进行预训练，但是在下游任务中Fine-tuning的效果，跟Bert在NLP下游任务中带来的性能提升，是没法比的。</p>
 <span id="more"></span>
-
 <p>因此，对比学习的出现就是要干NLP领域类似Bert预训练的事情，通过自监督学习，不依赖标注数据，要从无标注图像中自己学习知识。图像领域里的自监督可以分为两种类型：生成式自监督学习，判别式自监督学习。对比学习则是典型的判别式自监督学习，相对生成式自监督学习，对比学习的任务难度要低一些。</p>
 <p>现有方法基本上可以划分为：基于负例的对比学习方法、基于对比聚类的方法、基于不对称网络结构的方法，以及基于冗余消除损失函数的方法。</p>
 ]]></content>
@@ -19,66 +18,18 @@
       </tags>
   </entry>
   <entry>
-    <title>衡量相似性的方法</title>
-    <url>/2023/03/30/00-46-40/</url>
-    <content><![CDATA[<h2 id="相似性"><a href="#相似性" class="headerlink" title="相似性"></a>相似性</h2><p>对于深度学习的各种任务，我们常常需要最小化模型输出与真实标签之间的距离，我们往往采用均方误差，交叉熵等作为损失函数，换句话说，不管是拉近它们分布之间的距离，还是什么，都是在使它们这两个张量更为相似。因此我们任何能衡量两组数据的相似性的方法都可以作为损失函数。这里总结一下各种计算相似度的方法。</p>
-<h3 id="余弦相似度"><a href="#余弦相似度" class="headerlink" title="余弦相似度"></a>余弦相似度</h3><blockquote>
-<p><strong>余弦相似性</strong>通过测量两个<a href="https://baike.baidu.com/item/%E5%90%91%E9%87%8F?fromModule=lemma_inlink">向量</a>的夹角的<a href="https://baike.baidu.com/item/%E4%BD%99%E5%BC%A6?fromModule=lemma_inlink">余弦</a>值来度量它们之间的相似性。0度角的余弦值是1，而其他任何角度的余弦值都不大于1；并且其最小值是-1。从而两个向量之间的角度的余弦值确定两个向量是否大致指向相同的方向。两个向量有相同的指向时，余弦相似度的值为1；两个向量夹角为90°时，余弦相似度的值为0；两个向量指向完全相反的方向时，余弦相似度的值为-1。这结果是与向量的长度无关的，仅仅与向量的指向方向相关。</p>
-</blockquote>
-<h4 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h4><p>两个向量间的余弦值可以通过使用欧几里得点积公式求出：</p>
-<img src="/2023/03/30/00-46-40/image-20230330005905251.png" alt="image-20230330005905251" style="zoom:50%;">
-
-<p>给定两个属性向量，<em>A</em>和<em>B</em>，其余弦相似性<em>θ</em>由点积和向量长度计算出：</p>
-<img src="/2023/03/30/00-46-40/image-20230330005954209.png" alt="image-20230330005954209" style="zoom:50%;">
-
-<p>Pytorch代码：</p>
-<img src="/2023/03/30/00-46-40/image-20230330193750294.png" alt="image-20230330193750294" style="zoom:50%;">
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#given x1 and x2</span></span><br><span class="line">cos = torch.nn.CosineSimilarity(dim=<span class="number">1</span>,eps=<span class="number">1e-8</span>) <span class="comment">#eps防止分母除到0</span></span><br><span class="line">output = cos(x1,x2)</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>学习笔记</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>在Typora里插入图片(并在Hexo本地能显示)</title>
     <url>/2023/03/28/20-45-40/</url>
     <content><![CDATA[<h2 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h2><p><img src="/2023/03/28/20-45-40/image-20230328210953868.png" alt="image-20230328210953868"></p>
 <span id="more"></span>
-
-<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><h3 id="先下载Typora并配置偏好设置"><a href="#先下载Typora并配置偏好设置" class="headerlink" title="先下载Typora并配置偏好设置"></a>先下载Typora并配置偏好设置</h3><img src="/2023/03/28/20-45-40/image-20230328211235474.png" alt="image-20230328211235474" style="zoom:50%;">
-
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><h3 id="先下载Typora并配置偏好设置"><a href="#先下载Typora并配置偏好设置" class="headerlink" title="先下载Typora并配置偏好设置"></a>先下载Typora并配置偏好设置</h3><p><img src="/2023/03/28/20-45-40/image-20230328211235474.png" alt="image-20230328211235474" style="zoom:50%;"></p>
 <h3 id="并且在博客根目录下安装-hexo-asset-image"><a href="#并且在博客根目录下安装-hexo-asset-image" class="headerlink" title="并且在博客根目录下安装 hexo-asset-image"></a>并且在博客根目录下安装 <code>hexo-asset-image</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install https://github.com/CodeFalling/hexo-asset-image --save</span><br></pre></td></tr></table></figure>
-
 <p>修改 <code>_config.yml</code>中 <code>post_asset_folder</code>设置为<code>true</code></p>
 <p>此后每 <code>hexo new page</code>都会产生一个同名的文件夹，用于存放图片。</p>
 <h3 id="安装插件-hexo-renderer-marked"><a href="#安装插件-hexo-renderer-marked" class="headerlink" title="安装插件 hexo-renderer-marked"></a>安装插件 <code>hexo-renderer-marked</code></h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-renderer-marked --save</span><br></pre></td></tr></table></figure>
-
 <p>并且在<code>_config.yml</code>中加入如下设置：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">marked:</span><br><span class="line">  prependRoot: true</span><br><span class="line">  postAsset: true</span><br></pre></td></tr></table></figure>
-
 <h3 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h3><p>之后在哪复制的或者截图的就可以直接粘贴进Typora了</p>
-]]></content>
-      <categories>
-        <category>Hexo配置</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Next设置背景与文本框的透明度</title>
-    <url>/2023/03/27/17-53-08/</url>
-    <content><![CDATA[<h2 id="设置Hexo背景"><a href="#设置Hexo背景" class="headerlink" title="设置Hexo背景"></a>设置Hexo背景</h2><p>找到next主题下面的source&#x2F;css&#x2F;_schemes&#x2F;Mist&#x2F;index.styl，添加如下代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">body &#123; </span><br><span class="line">    background:url(/uploads/1.png);</span><br><span class="line">    background-repeat: no-repeat;</span><br><span class="line">    background-attachment:fixed; //不重复</span><br><span class="line">    background-size: cover;      //填充</span><br><span class="line">    background-position:100% 100%;</span><br><span class="line">&#125;       </span><br></pre></td></tr></table></figure>
-<h2 id="设置文本框的透明度"><a href="#设置文本框的透明度" class="headerlink" title="设置文本框的透明度"></a>设置文本框的透明度</h2><p>可以再添加如下代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.post-block &#123;</span><br><span class="line">  background: rgba(255,255,255,.85) none repeat scroll !important;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><em>rgba的第四个参数是控制透明度，其余控制文章背景的颜色。</em></p>
-<p>其余美化参考这篇<a href="https://blog.csdn.net/lyshark_csdn/article/details/124939308?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-124939308-blog-93797964.235%5Ev27%5Epc_relevant_default&spm=1001.2101.3001.4242.1&utm_relevant_index=3">博客</a></p>
 ]]></content>
       <categories>
         <category>Hexo配置</category>
@@ -92,17 +43,121 @@
     <url>/2023/03/27/15-38-50/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
 <p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
 <h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
 <p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
 <h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
 <p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
 <h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>hexo-bug</title>
+    <url>/2023/03/31/22-41-53/</url>
+    <content><![CDATA[<h2 id="Hexo遇到的BUG"><a href="#Hexo遇到的BUG" class="headerlink" title="Hexo遇到的BUG"></a>Hexo遇到的BUG</h2><h4 id="编辑数学公式时："><a href="#编辑数学公式时：" class="headerlink" title="编辑数学公式时："></a>编辑数学公式时：</h4><p>使用Latex表示公式时连续使用 <code>&#123; &#123;</code>会报错，且无法渲染，需要在括号之间加入空格完美解决。<del>折磨了半天，竟然这么简单的解决了，之前还查了什么导致和markdown冲突，需要改解析的规则</del></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Next设置背景与文本框的透明度</title>
+    <url>/2023/03/27/17-53-08/</url>
+    <content><![CDATA[<h2 id="设置Hexo背景"><a href="#设置Hexo背景" class="headerlink" title="设置Hexo背景"></a>设置Hexo背景</h2><p>找到next主题下面的source/css/_schemes/Mist/index.styl，添加如下代码：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">body &#123; </span><br><span class="line">    background:url(/uploads/1.png);</span><br><span class="line">    background-repeat: no-repeat;</span><br><span class="line">    background-attachment:fixed; //不重复</span><br><span class="line">    background-size: cover;      //填充</span><br><span class="line">    background-position:100% 100%;</span><br><span class="line">&#125;       </span><br></pre></td></tr></table></figure></p>
+<h2 id="设置文本框的透明度"><a href="#设置文本框的透明度" class="headerlink" title="设置文本框的透明度"></a>设置文本框的透明度</h2><p>可以再添加如下代码：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.post-block &#123;</span><br><span class="line">  background: rgba(255,255,255,.85) none repeat scroll !important;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><em>rgba的第四个参数是控制透明度，其余控制文章背景的颜色。</em></p>
+<p>其余美化参考这篇<a href="https://blog.csdn.net/lyshark_csdn/article/details/124939308?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-124939308-blog-93797964.235^v27^pc_relevant_default&amp;spm=1001.2101.3001.4242.1&amp;utm_relevant_index=3">博客</a></p>
+]]></content>
+      <categories>
+        <category>Hexo配置</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DDPM(Denoising Diffusion Probabilistic Model)公式以及代码解析</title>
+    <url>/2023/03/31/15-23-50/</url>
+    <content><![CDATA[<h2 id="Diffusion-model之DDPM"><a href="#Diffusion-model之DDPM" class="headerlink" title="Diffusion model之DDPM"></a>Diffusion model之DDPM</h2><blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>本文理论公式等不做详细推导，只做总结（<del>毕竟是给我自己看的，不是</del>），代码部分会详细解析。 </p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<h3 id="Denoising-Diffusion-Probabilistic-Model"><a href="#Denoising-Diffusion-Probabilistic-Model" class="headerlink" title="Denoising Diffusion Probabilistic Model"></a>Denoising Diffusion Probabilistic Model</h3><h4 id="前向过程："><a href="#前向过程：" class="headerlink" title="前向过程："></a>前向过程：<img src="/2023/03/31/15-23-50/image-20230331160559333.png" alt="image-20230331160559333" style="zoom:50%;"></h4><p>通过从原始数据分布 $x_0 \sim q(x_0) $ 不断加高斯噪声，根据马尔可夫链的性质，在T趋于∞的时候可以使其成为一个平稳分布（标准高斯分布） $x_T \sim \varphi(x)$即 $X \sim N(0,1)$ ，加噪的方差(可以理解为噪声的尺度)由 $\beta_t$控制,且随时间步T变化而变化。</p>
+<p>每个时刻加噪后的分布可以表示为 $q(\mathbf{x}_{t}|\mathbf{x}_{t-1}) := \mathcal{N}(\mathbf{x}:\sqrt{1-\beta_t}\mathbf{x}_{t-1}),\beta_tI) $，整个扩散过程可以表示为：$q\left(\mathbf{x}_{1: T} \mid \mathbf{x}_{0}\right):=\prod_{t=1}^{T} q\left(\mathbf{x}_{t} \mid \mathbf{x}_{t-1}\right)$。但一步一步加噪是否可以优化，考虑是否可以一步到位，于是便可以根据正态分布的可加性继续推导，用每一个时刻的上一时刻展开表示，其中做一个表示上的代换（ $\alpha_t = 1-\beta_t$ ），最后可以发现规律:</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\mathbf{x}_{t} & =\sqrt{\alpha_{t}} \mathbf{x}_{t-1}+\sqrt{1-\alpha_{t}} \epsilon_{t-1} \\
+& =\sqrt{\alpha_{t}}\left(\sqrt{\alpha_{t-1}} \mathbf{x}_{t-2}+\sqrt{1-\alpha_{t-1}} \epsilon_{t-2}\right)+\sqrt{1-\alpha_{t}} \epsilon_{t-1} \\
+& =\sqrt{\alpha_{t} \alpha_{t-1}} \mathbf{x}_{t-2}+\sqrt{ {\sqrt{\alpha_{t}-\alpha_{t} \alpha_{t-1}}}^{2}+{\sqrt{1-\alpha_{t}}}^{2}} \bar{\epsilon}_{t-2} \\
+& =\sqrt{\alpha_{t} \alpha_{t-1}} \mathbf{x}_{t-2}+\sqrt{1-\alpha_{t} \alpha_{t-1}} \bar{\epsilon}_{t-2} \\
+& =\ldots \\
+& =\sqrt{\bar{\alpha}_{t}} \mathbf{x}_{0}+\sqrt{1-\bar{\alpha}_{t}} \epsilon
+\end{aligned}</script><p>即 $q\left(\mathbf{x}_{t} \mid \mathbf{x}_{0}\right)=\mathcal{N}\left(\mathbf{x}_{t} ; \sqrt{\bar{\alpha}_{t}} \mathbf{x}_{0},\left(1-\bar{\alpha}_{t}\right) \mathbf{I}\right)$ ，从而我们可以一步生成任意时刻的图像：</p>
+<p><img src="/2023/03/31/15-23-50/image-20230331164416748.png" alt="image-20230331164416748" style="zoom:50%;"></p>
+<p>生成 $\mathbf{x}_{t}$的过程我们可以利用<a href="https://zhuanlan.zhihu.com/p/542478018">重参数化</a>技巧得到。</p>
+<h4 id="逆向过程："><a href="#逆向过程：" class="headerlink" title="逆向过程："></a>逆向过程：<img src="/2023/03/31/15-23-50/image-20230331230650193.png" alt="image-20230331230650193" style="zoom:50%;"></h4><p>逆向是一个去噪的过程，从一个随机高斯噪声开始，一步一步生成原始高清的图片，反向过程也定义为一个马尔可夫过程，要求 $t=0$时刻的数据，即要求 $p_\theta (\mathbf{x}_{0:T}) = p\left(\mathbf{x}_{T}\right) \prod_{t=1}^{T} p_{\theta}\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}\right)$，但这里是 $p_{\theta}\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}\right)$ 我们是无从得知。</p>
+<p>这里我们利用贝叶斯公式进行一个展开：</p>
+<script type="math/tex; mode=display">
+p_{\theta}\left(\mathbf{x}_{t-1}\mid\mathbf{x}_{t},\mathbf{x}_{0}\right) = q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}, \mathbf{x}_{0}\right)=q\left(\mathbf{x}_{t} \mid \mathbf{x}_{t-1}, \mathbf{x}_{0}\right) \frac{q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{0}\right)}{q\left(\mathbf{x}_{t} \mid \mathbf{x}_{0}\right)}</script><p>带入正态分布的概率密度函数，展开并配方：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}, \mathbf{x}_{0}\right) & =q\left(\mathbf{x}_{t} \mid \mathbf{x}_{t-1}, \mathbf{x}_{0}\right) \frac{q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{0}\right)}{q\left(\mathbf{x}_{t} \mid \mathbf{x}_{0}\right)} \\
+& \propto \exp \left(-\frac{1}{2}\left(\frac{\left(\mathbf{x}_{t}-\sqrt{\alpha_{t}} \mathbf{x}_{t-1}\right)^{2}}{\beta_{t}}+\frac{\left(\mathbf{x}_{t-1}-\sqrt{\bar{\alpha}_{t-1}} \mathbf{x}_{0}\right)^{2}}{1-\bar{\alpha}_{t-1}}\right.\right.\left.\left.-\frac{\left(\mathbf{x}_{t}-\sqrt{\bar{\alpha}_{t}} \mathbf{x}_{0}\right)^{2}}{1-\bar{\alpha}_{t}}\right)\right) \\
+&=\exp \left(-\frac{1}{2}\left(\left(\frac{\alpha_{t}}{\beta_{t}}+\frac{1}{1-\bar{\alpha}_{t-1}}\right) \mathbf{x}_{t-1}^{2}-\left(\frac{2 \sqrt{\alpha_{t}}}{\beta_{t}} \mathbf{x}_{t}+\frac{2 \sqrt{\bar{\alpha}_{t-1}}}{1-\bar{\alpha}_{t-1}} \mathbf{x}_{0}\right) \mathbf{x}_{t-1}\right.\right.\left.\left.+C\left(\mathbf{x}_{t}, \mathbf{x}_{0}\right)\right)\right)
+
+\end{aligned}</script><p>配方后可以用一个新的分布表示:          $ q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}, \mathbf{x}_{0}\right) ～ \mathcal{N}(\mathbf{x}_{t-1};\tilde{\mathbf{\mu}} (\mathbf{x}_t,\mathbf{x}_{0}),\tilde{\beta_t}I)$</p>
+<p>其中：</p>
+<p>其中方差可以看出是一个定值，而均值和 $\mathbf{x}_t$、$\mathbf{x}_0$有关，$\mathbf{x}_t$是已知输入，$\mathbf{x}_0$可以由前向过程一步加噪的式子变换后表示。</p>
+<p>这里我们如果我们有这个均值和方差，便可以根据这两个参数从正态分布中采样出一个数据，即得到 $\mathbf{x}_{t-1}$。但是我们没有噪声 $\tilde{z}$的信息，现在可以考虑用一个神经网络去学习这个$\tilde{z}$的信息，也可以直接学习均值的信息（但论文表明直接预测均值效果不好）。于是考虑用一个conditional的Unet去预测，$\tilde{z} = U net(\mathbf{x}_t,t)$，之后便可以从$\mathbf{x}_t$预测得到$\tilde{z}$，进而计算$\mathbf{x}_{t-1}$，直到$\mathbf{x}_0$</p>
+<p>。        <img src="/2023/03/31/15-23-50/image-20230401004805214.png" alt="image-20230401004805214" style="zoom:50%;"></p>
+<h4 id="训练过程："><a href="#训练过程：" class="headerlink" title="训练过程："></a>训练过程：</h4><p><img src="/2023/03/31/15-23-50/image-20230401005008193.png" alt="image-20230401005008193" style="zoom:50%;"></p>
+<h4 id="采样过程："><a href="#采样过程：" class="headerlink" title="采样过程："></a>采样过程：</h4><p><img src="/2023/03/31/15-23-50/image-20230401005051290.png" alt="image-20230401005051290" style="zoom:50%;"></p>
+]]></content>
+      <categories>
+        <category>深度学习</category>
+        <category>Diffusion model</category>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>Diffusion model</tag>
+        <tag>代码讲解</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>衡量相似性的方法</title>
+    <url>/2023/03/30/00-46-40/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>保持距离！ </p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<h2 id="相似性"><a href="#相似性" class="headerlink" title="相似性"></a>相似性</h2><p>对于深度学习的各种任务，我们常常需要最小化模型输出与真实标签之间的距离，我们往往采用均方误差，交叉熵等作为损失函数，换句话说，不管是拉近它们分布之间的距离，还是什么，都是在使它们这两个张量更为相似。因此我们任何能衡量两组数据的相似性的方法都可以作为损失函数。这里总结一下各种计算相似度的方法。</p>
+<hr>
+<h3 id="余弦相似度"><a href="#余弦相似度" class="headerlink" title="余弦相似度"></a>余弦相似度</h3><blockquote>
+<p><strong>余弦相似性</strong>通过测量两个<a href="https://baike.baidu.com/item/向量?fromModule=lemma_inlink">向量</a>的夹角的<a href="https://baike.baidu.com/item/余弦?fromModule=lemma_inlink">余弦</a>值来度量它们之间的相似性。0度角的余弦值是1，而其他任何角度的余弦值都不大于1；并且其最小值是-1。从而两个向量之间的角度的余弦值确定两个向量是否大致指向相同的方向。两个向量有相同的指向时，余弦相似度的值为1；两个向量夹角为90°时，余弦相似度的值为0；两个向量指向完全相反的方向时，余弦相似度的值为-1。这结果是与向量的长度无关的，仅仅与向量的指向方向相关。</p>
+</blockquote>
+<span id="more"></span>
+<h4 id="计算方式："><a href="#计算方式：" class="headerlink" title="计算方式："></a>计算方式：</h4><p>两个向量间的余弦值可以通过使用欧几里得点积公式求出：</p>
+<p><img src="/2023/03/30/00-46-40/image-20230330005905251.png" alt="image-20230330005905251" style="zoom:50%;"></p>
+<p>给定两个属性向量，<em>A</em>和<em>B</em>，其余弦相似性<em>θ</em>由点积和向量长度计算出：</p>
+<p><img src="/2023/03/30/00-46-40/image-20230330005954209.png" alt="image-20230330005954209" style="zoom:50%;"></p>
+<h5 id="Pytorch代码："><a href="#Pytorch代码：" class="headerlink" title="Pytorch代码："></a>Pytorch代码：</h5><p><img src="/2023/03/30/00-46-40/image-20230330193750294.png" alt="image-20230330193750294" style="zoom:50%;"></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#given x1 and x2</span></span><br><span class="line">cos = torch.nn.CosineSimilarity(dim=<span class="number">1</span>,eps=<span class="number">1e-8</span>) <span class="comment">#eps防止分母除到0</span></span><br><span class="line">output = cos(x1,x2)</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="感知相似性（Perceptual-Similarity）"><a href="#感知相似性（Perceptual-Similarity）" class="headerlink" title="感知相似性（Perceptual Similarity）"></a><strong>感知相似性（Perceptual Similarity）</strong></h3><blockquote>
+<p>LPIPS：来源于CVPR2018的一篇论文《The Unreasonable Effectiveness of Deep Features as a Perceptual Metric》，该度量标准学习生成图像到Ground Truth的反向映射强制生成器学习从假图像中重构真实图像的反向映射，并优先处理它们之间的感知相似度，更符合人类的感知，可以用于衡量两个图片之间的相似度。</p>
+</blockquote>
+<h4 id="计算方法："><a href="#计算方法：" class="headerlink" title="计算方法："></a>计算方法：</h4><p><img src="/2023/03/30/00-46-40/image-20230330202419413.png" alt="image-20230330202419413" style="zoom:50%;"></p>
+<p><img src="/2023/03/30/00-46-40/image-20230330202503729.png" alt="image-20230330202503729" style="zoom:30%;"></p>
+<p>通过对各通道加和，空间平均每一层网络输出的特征图之间的距离。然后将得到的两个距离输入到评分网络中。$W_l$是与通道数同维度的可训练权重参数。其中$F$表示预训练特征提取模型，如Vgg，Alex等。</p>
+<h5 id="Pytorch代码：-1"><a href="#Pytorch代码：-1" class="headerlink" title="Pytorch代码："></a>Pytorch代码：</h5><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!pip install lpips</span></span><br><span class="line"><span class="keyword">import</span> lpips</span><br><span class="line">lpips_fn = lpips.LPIPS(net=<span class="string">&#x27;vgg&#x27;</span>)</span><br><span class="line">output = lpips_fn(x1,x2)</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>深度学习</category>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
   </entry>
 </search>
