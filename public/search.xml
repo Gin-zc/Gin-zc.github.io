@@ -18,6 +18,44 @@
       </tags>
   </entry>
   <entry>
+    <title>衡量相似性的方法</title>
+    <url>/2023/03/30/00-46-40/</url>
+    <content><![CDATA[<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>保持距离！ </p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<h2 id="相似性"><a href="#相似性" class="headerlink" title="相似性"></a>相似性</h2><p>对于深度学习的各种任务，我们常常需要最小化模型输出与真实标签之间的距离，我们往往采用均方误差，交叉熵等作为损失函数，换句话说，不管是拉近它们分布之间的距离，还是什么，都是在使它们这两个张量更为相似。因此我们任何能衡量两组数据的相似性的方法都可以作为损失函数。这里总结一下各种计算相似度的方法。</p>
+<hr>
+<h3 id="余弦相似度"><a href="#余弦相似度" class="headerlink" title="余弦相似度"></a>余弦相似度</h3><blockquote>
+<p><strong>余弦相似性</strong>通过测量两个<a href="https://baike.baidu.com/item/向量?fromModule=lemma_inlink">向量</a>的夹角的<a href="https://baike.baidu.com/item/余弦?fromModule=lemma_inlink">余弦</a>值来度量它们之间的相似性。0度角的余弦值是1，而其他任何角度的余弦值都不大于1；并且其最小值是-1。从而两个向量之间的角度的余弦值确定两个向量是否大致指向相同的方向。两个向量有相同的指向时，余弦相似度的值为1；两个向量夹角为90°时，余弦相似度的值为0；两个向量指向完全相反的方向时，余弦相似度的值为-1。这结果是与向量的长度无关的，仅仅与向量的指向方向相关。</p>
+</blockquote>
+<span id="more"></span>
+<h4 id="计算方式："><a href="#计算方式：" class="headerlink" title="计算方式："></a>计算方式：</h4><p>两个向量间的余弦值可以通过使用欧几里得点积公式求出：</p>
+<p><img src="/2023/03/30/00-46-40/image-20230330005905251.png" alt="image-20230330005905251" style="zoom:50%;"></p>
+<p>给定两个属性向量，<em>A</em>和<em>B</em>，其余弦相似性<em>θ</em>由点积和向量长度计算出：</p>
+<p><img src="/2023/03/30/00-46-40/image-20230330005954209.png" alt="image-20230330005954209" style="zoom:50%;"></p>
+<h5 id="Pytorch代码："><a href="#Pytorch代码：" class="headerlink" title="Pytorch代码："></a>Pytorch代码：</h5><p><img src="/2023/03/30/00-46-40/image-20230330193750294.png" alt="image-20230330193750294" style="zoom:50%;"></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#given x1 and x2</span></span><br><span class="line">cos = torch.nn.CosineSimilarity(dim=<span class="number">1</span>,eps=<span class="number">1e-8</span>) <span class="comment">#eps防止分母除到0</span></span><br><span class="line">output = cos(x1,x2)</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="感知相似性（Perceptual-Similarity）"><a href="#感知相似性（Perceptual-Similarity）" class="headerlink" title="感知相似性（Perceptual Similarity）"></a><strong>感知相似性（Perceptual Similarity）</strong></h3><blockquote>
+<p>LPIPS：来源于CVPR2018的一篇论文《The Unreasonable Effectiveness of Deep Features as a Perceptual Metric》，该度量标准学习生成图像到Ground Truth的反向映射强制生成器学习从假图像中重构真实图像的反向映射，并优先处理它们之间的感知相似度，更符合人类的感知，可以用于衡量两个图片之间的相似度。</p>
+</blockquote>
+<h4 id="计算方法："><a href="#计算方法：" class="headerlink" title="计算方法："></a>计算方法：</h4><p><img src="/2023/03/30/00-46-40/image-20230330202419413.png" alt="image-20230330202419413" style="zoom:50%;"></p>
+<p><img src="/2023/03/30/00-46-40/image-20230330202503729.png" alt="image-20230330202503729" style="zoom:30%;"></p>
+<p>通过对各通道加和，空间平均每一层网络输出的特征图之间的距离。然后将得到的两个距离输入到评分网络中。$W_l$是与通道数同维度的可训练权重参数。其中$F$表示预训练特征提取模型，如Vgg，Alex等。</p>
+<h5 id="Pytorch代码：-1"><a href="#Pytorch代码：-1" class="headerlink" title="Pytorch代码："></a>Pytorch代码：</h5><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!pip install lpips</span></span><br><span class="line"><span class="keyword">import</span> lpips</span><br><span class="line">lpips_fn = lpips.LPIPS(net=<span class="string">&#x27;vgg&#x27;</span>)</span><br><span class="line">output = lpips_fn(x1,x2)</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>深度学习</category>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>DDPM(Denoising Diffusion Probabilistic Model)公式以及代码解析</title>
     <url>/2023/03/31/15-23-50/</url>
     <content><![CDATA[<h2 id="Diffusion-model之DDPM"><a href="#Diffusion-model之DDPM" class="headerlink" title="Diffusion model之DDPM"></a>Diffusion model之DDPM</h2><blockquote class="blockquote-center">
@@ -112,44 +150,6 @@ q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}, \mathbf{x}_{0}\right) ～ \mathcal{
       </tags>
   </entry>
   <entry>
-    <title>衡量相似性的方法</title>
-    <url>/2023/03/30/00-46-40/</url>
-    <content><![CDATA[<blockquote class="blockquote-center">
-            <i class="fa fa-quote-left"></i>
-            <p>保持距离！ </p>
-
-            <i class="fa fa-quote-right"></i>
-          </blockquote>
-<h2 id="相似性"><a href="#相似性" class="headerlink" title="相似性"></a>相似性</h2><p>对于深度学习的各种任务，我们常常需要最小化模型输出与真实标签之间的距离，我们往往采用均方误差，交叉熵等作为损失函数，换句话说，不管是拉近它们分布之间的距离，还是什么，都是在使它们这两个张量更为相似。因此我们任何能衡量两组数据的相似性的方法都可以作为损失函数。这里总结一下各种计算相似度的方法。</p>
-<hr>
-<h3 id="余弦相似度"><a href="#余弦相似度" class="headerlink" title="余弦相似度"></a>余弦相似度</h3><blockquote>
-<p><strong>余弦相似性</strong>通过测量两个<a href="https://baike.baidu.com/item/向量?fromModule=lemma_inlink">向量</a>的夹角的<a href="https://baike.baidu.com/item/余弦?fromModule=lemma_inlink">余弦</a>值来度量它们之间的相似性。0度角的余弦值是1，而其他任何角度的余弦值都不大于1；并且其最小值是-1。从而两个向量之间的角度的余弦值确定两个向量是否大致指向相同的方向。两个向量有相同的指向时，余弦相似度的值为1；两个向量夹角为90°时，余弦相似度的值为0；两个向量指向完全相反的方向时，余弦相似度的值为-1。这结果是与向量的长度无关的，仅仅与向量的指向方向相关。</p>
-</blockquote>
-<span id="more"></span>
-<h4 id="计算方式："><a href="#计算方式：" class="headerlink" title="计算方式："></a>计算方式：</h4><p>两个向量间的余弦值可以通过使用欧几里得点积公式求出：</p>
-<p><img src="/2023/03/30/00-46-40/image-20230330005905251.png" alt="image-20230330005905251" style="zoom:50%;"></p>
-<p>给定两个属性向量，<em>A</em>和<em>B</em>，其余弦相似性<em>θ</em>由点积和向量长度计算出：</p>
-<p><img src="/2023/03/30/00-46-40/image-20230330005954209.png" alt="image-20230330005954209" style="zoom:50%;"></p>
-<h5 id="Pytorch代码："><a href="#Pytorch代码：" class="headerlink" title="Pytorch代码："></a>Pytorch代码：</h5><p><img src="/2023/03/30/00-46-40/image-20230330193750294.png" alt="image-20230330193750294" style="zoom:50%;"></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#given x1 and x2</span></span><br><span class="line">cos = torch.nn.CosineSimilarity(dim=<span class="number">1</span>,eps=<span class="number">1e-8</span>) <span class="comment">#eps防止分母除到0</span></span><br><span class="line">output = cos(x1,x2)</span><br></pre></td></tr></table></figure>
-<hr>
-<h3 id="感知相似性（Perceptual-Similarity）"><a href="#感知相似性（Perceptual-Similarity）" class="headerlink" title="感知相似性（Perceptual Similarity）"></a><strong>感知相似性（Perceptual Similarity）</strong></h3><blockquote>
-<p>LPIPS：来源于CVPR2018的一篇论文《The Unreasonable Effectiveness of Deep Features as a Perceptual Metric》，该度量标准学习生成图像到Ground Truth的反向映射强制生成器学习从假图像中重构真实图像的反向映射，并优先处理它们之间的感知相似度，更符合人类的感知，可以用于衡量两个图片之间的相似度。</p>
-</blockquote>
-<h4 id="计算方法："><a href="#计算方法：" class="headerlink" title="计算方法："></a>计算方法：</h4><p><img src="/2023/03/30/00-46-40/image-20230330202419413.png" alt="image-20230330202419413" style="zoom:50%;"></p>
-<p><img src="/2023/03/30/00-46-40/image-20230330202503729.png" alt="image-20230330202503729" style="zoom:30%;"></p>
-<p>通过对各通道加和，空间平均每一层网络输出的特征图之间的距离。然后将得到的两个距离输入到评分网络中。$W_l$是与通道数同维度的可训练权重参数。其中$F$表示预训练特征提取模型，如Vgg，Alex等。</p>
-<h5 id="Pytorch代码：-1"><a href="#Pytorch代码：-1" class="headerlink" title="Pytorch代码："></a>Pytorch代码：</h5><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!pip install lpips</span></span><br><span class="line"><span class="keyword">import</span> lpips</span><br><span class="line">lpips_fn = lpips.LPIPS(net=<span class="string">&#x27;vgg&#x27;</span>)</span><br><span class="line">output = lpips_fn(x1,x2)</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>深度学习</category>
-        <category>学习笔记</category>
-      </categories>
-      <tags>
-        <tag>笔记</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Next设置背景与文本框的透明度</title>
     <url>/2023/03/27/17-53-08/</url>
     <content><![CDATA[<h2 id="设置Hexo背景"><a href="#设置Hexo背景" class="headerlink" title="设置Hexo背景"></a>设置Hexo背景</h2><p>找到next主题下面的source/css/_schemes/Mist/index.styl，添加如下代码：<br><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">body &#123; </span><br><span class="line">    background:url(/uploads/1.png);</span><br><span class="line">    background-repeat: no-repeat;</span><br><span class="line">    background-attachment:fixed; //不重复</span><br><span class="line">    background-size: cover;      //填充</span><br><span class="line">    background-position:100% 100%;</span><br><span class="line">&#125;       </span><br></pre></td></tr></table></figure></p>
@@ -161,6 +161,108 @@ q\left(\mathbf{x}_{t-1} \mid \mathbf{x}_{t}, \mathbf{x}_{0}\right) ～ \mathcal{
       </categories>
       <tags>
         <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>《Physically Adversarial Infrared Patches with Learnable Shapes and Locations》阅读笔记</title>
+    <url>/2023/04/02/20-50-07/</url>
+    <content><![CDATA[<h2 id="《Physically-Adversarial-Infrared-Patches-with-Learnable-Shapes-and-Locations》"><a href="#《Physically-Adversarial-Infrared-Patches-with-Learnable-Shapes-and-Locations》" class="headerlink" title="《Physically Adversarial Infrared Patches with Learnable Shapes and Locations》"></a>《Physically Adversarial Infrared Patches with Learnable Shapes and Locations》</h2><h3 id="CVPR-2023"><a href="#CVPR-2023" class="headerlink" title="CVPR 2023"></a>CVPR 2023</h3><p><img src="/2023/04/02/20-50-07/image-20230403165457032.png" alt="image-20230403165457032" style="zoom:34%;"></p>
+<blockquote>
+<p>一句话：针对红外目标检测场景，设计了一种对抗性红外补丁，通过隔热材料来改变目标热成像的图像，通过可学习的补丁形状和位置，进一步增加了物理世界攻击的可行性。</p>
+</blockquote>
+<hr>
+<p><img src="/2023/04/02/20-50-07/image-20230403175255441.png" alt="image-20230403175255441" style="zoom:50%;"></p>
+<h3 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h3><p>​        红外成像中的目标检测以其在恶劣环境下具有较强的抗干扰性而著称，被广泛应用于安防监视、遥感等安全关键任务中。因此有必要对红外目标检测的物理对抗鲁棒性进行评估。以往的对抗攻击都是从RGB的角度产生的扰动，对红外相机来说是无法捕获到的。所以需要一种针对性的攻击方法。</p>
+<hr>
+<h3 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h3><p>现在也有一些相关工作：</p>
+<ul>
+<li>针对红外目标检测不可感知的对抗攻击，但是属于修改红外图像中的像素值而非物理世界的攻击。</li>
+<li>通过小灯泡来模拟热源，从而改变物体的红外辐射分布，来产生对抗扰动，但局限性很大，一个是不隐蔽且不容易实施，需要设计电路板来点亮小灯泡，第二是它是产生新的热源而不是隐蔽覆盖它们，受限于一些需要隐蔽热源的场景。</li>
+<li>通过穿上包裹全身的对抗性衣服，可以从不同角度去攻击探测器。具体操作是先设计2D的QR图案，然后转换成3D的衣服，最后将特殊红外材料贴到指定位置。总之攻击成本非常高和复杂。</li>
+</ul>
+<p><img src="/2023/04/02/20-50-07/image-20230403175401024.png" alt="image-20230403175401024" style="zoom:50%;"></p>
+<ul>
+<li><p>本文的方法是通过减少热辐射，而且只需要设计Patch的形状和位置即可达到攻击效果，有很强的隐蔽性。</p>
+<hr>
+<h3 id="Problem-Formuation"><a href="#Problem-Formuation" class="headerlink" title="Problem Formuation"></a>Problem Formuation</h3><h5 id="目标检测："><a href="#目标检测：" class="headerlink" title="目标检测："></a>目标检测：</h5><p>主要基于行人检测任务，对于所有的候选框 ${b_i \mid i=1, \ldots, n}$的置信度 ${s_i \mid i=1, \ldots, n}$，选择置信度最高的框作为最终目标，当大于一个阈值的时候算检测到行人。</p>
+<h5 id="攻击目标："><a href="#攻击目标：" class="headerlink" title="攻击目标："></a>攻击目标：</h5><p>最小化候选边框最大置信度的分数，使其低于检测阈值，从而检测不到行人。即最小化如下攻击损失：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{a t t a c k}\left(f\left(\boldsymbol{x}_{a d v}\right)\right)=\max _{i \in\{1, \ldots, n\}}\left(s_i\right)</script><h5 id="对抗样本的构建："><a href="#对抗样本的构建：" class="headerlink" title="对抗样本的构建："></a>对抗样本的构建：</h5><script type="math/tex; mode=display">
+\boldsymbol{x}_{a d v}=\boldsymbol{x} \odot(\mathbf{1}-\boldsymbol{M})+\hat{\boldsymbol{x}} \odot \boldsymbol{M}</script><p>其中 $\boldsymbol{M} \in{0,1}^{h \times w}$是用于约束隔热材料的形状和位置掩码，最开始的时候为了能优化设计了软 $\boldsymbol{M}$，范围是在 $[0,1]^{h \times w}$ 的连续值，最后不断优化接近 ${0,1}^{h \times w}$</p>
+<p>而 $\hat{\boldsymbol{x}}$表示隔热材料返回的热成像的像素值，但实际很难控制，这是很大程度取决于隔热材料的物理性质，热反射率等等，而通常整个Patch都是一样的材料，选定了材料就相当于确定了 $\hat{\boldsymbol{x}}$，基本整个图案都是相同的值，这里尽可能让它趋近于0，从而后续设计对抗样本只需要去优化 Mask的形状和位置。</p>
+<p><img src="/2023/04/02/20-50-07/image-20230403195454965.png" alt="image-20230403195454965" style="zoom:50%;"></p>
+<h5 id="MASK的优化目标："><a href="#MASK的优化目标：" class="headerlink" title="MASK的优化目标："></a>MASK的优化目标：</h5><p>利用梯度的优化来求解最优的的 $\boldsymbol{M}$</p>
+<ol>
+<li><p>$\boldsymbol{M}$中的像素应该尽可能聚集在一起。</p>
+</li>
+<li><p>$\boldsymbol{M}$中的像素值应该尽可能接近0和1。</p>
+<p><strong>这样可以使优化后MASK更好的设计隔热材料，从而转换到物理世界的攻击更容易实现。</strong></p>
+</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><h5 id="如何聚合-boldsymbol-M-​中的像素-："><a href="#如何聚合-boldsymbol-M-​中的像素-：" class="headerlink" title="如何聚合 $\boldsymbol{M}$​中的像素 ："></a>如何聚合 $\boldsymbol{M}$​中的像素 ：</h5><p>通过设计一个局部聚合系数去控制，优化使系数越大，也就意味着越聚合。</p>
+<script type="math/tex; mode=display">
+C_i=\frac{\mathcal{K} * \boldsymbol{A}_{3 \times 3}}{k_i\left(k_i-1\right)}=\frac{\mathcal{K} * \boldsymbol{A}_{3 \times 3}}{56}</script><p>对每个像素点都定义一个局部聚合系数 $C_i$，$\mathcal{K}$表示临接点的边数矩阵，$*$表示卷积操作。 $\boldsymbol{A}_{3 \times 3}$表示一个衰减因子矩阵，由 $\alpha_j$ 组成。</p>
+<script type="math/tex; mode=display">
+\alpha_j=V_j \times \frac{1}{\left|L_j\right|} \sum_{v_k \in L_j} V_k</script><p><img src="/2023/04/02/20-50-07/image-20230403205115813.png" alt="image-20230403205115813" style="zoom:40%;"></p>
+<p>最后得到整个 $\boldsymbol{M}$的聚合程度，表示为  $C(M) = \sum_{j=1}^h \sum_{k=1}^w C_{j k} \cdot M_{j k}$，优化使其最大。最小化Loss表示为：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{a g g}(\boldsymbol{M})=-C(\boldsymbol{M})=-\frac{1}{h w} \sum_{j=1}^h \sum_{k=1}^w C_{j k} \cdot M_{j k}</script><hr>
+<h5 id="如何二值化："><a href="#如何二值化：" class="headerlink" title="如何二值化："></a>如何二值化：</h5><p><strong>通过MSE约束：</strong></p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{M S E}(\mathcal{H}(\boldsymbol{M}), \boldsymbol{I})=\frac{1}{h w} \sum_{j=1}^h \sum_{k=1}^w\left(\mathcal{H}\left(M_{j k}\right)-1\right)^2</script><p>其中 $\boldsymbol{I}$为全1的矩阵， $\mathcal{H}(M_{jk})$是一个类似ReLU的函数，其中 $M_{jk}$小于阈值的时候置1，大于阈值的时候保持不变。这样可以只约束大于阈值的部分，从而更接近1。</p>
+<p>同时为了使 $\boldsymbol{M}$稀疏化，额外引入对它本身的一个L1约束。总的二值化损失为：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{\text {binary }}(\boldsymbol{M})=\|\boldsymbol{M}\|_1+\alpha \cdot \mathcal{L}_{M S E}(\mathcal{H}(\boldsymbol{M}), \boldsymbol{I})</script><p>因此最后整个Loss Function为：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{o b j}=\mathcal{L}_{a t t a c k}\left(f\left(\boldsymbol{x}_{a d v}\right)\right)+\lambda_1 \mathcal{L}_{\text {binary }}(\boldsymbol{M})+\lambda_2 \mathcal{L}_{a g g}</script><script type="math/tex; mode=display">
+\boldsymbol{M}^*=\arg \min _{\boldsymbol{M}} \mathcal{L}_{o b j}\left(f\left(\boldsymbol{x}_{a d v}\right)\right)</script><hr>
+<h5 id="通过带动量的梯度下降优化："><a href="#通过带动量的梯度下降优化：" class="headerlink" title="通过带动量的梯度下降优化："></a>通过带动量的梯度下降优化：</h5><script type="math/tex; mode=display">
+\begin{gathered}
+\boldsymbol{x}_{t+1}^{a d v}=\boldsymbol{x} \odot\left(1-\boldsymbol{M}_{t+1}\right)+\hat{\boldsymbol{x}} \odot \boldsymbol{M}_{t+1} \\\\
+\boldsymbol{M}_{t+1}=\left(\boldsymbol{M}_t-\epsilon \cdot g_{t+1}\right) \odot \boldsymbol{M}_{o b j} \\\\
+g_{t+1}=\mu \cdot g_t+\frac{\nabla_{\boldsymbol{M}} \mathcal{L}_{o b j}\left(f\left(\boldsymbol{x}_{a d v}\right), y ; \boldsymbol{M}_t\right)}{\left\|\nabla_{\boldsymbol{M}} \mathcal{L}_{o b j}\left(f\left(\boldsymbol{x}_{a d v}\right), y ; \boldsymbol{M}_t\right)\right\|_1}
+\end{gathered}</script><p>其中 $\boldsymbol{M}_{o b j}$是目标检测对象的原始定位的框的掩码，因为我们并不想优化目标对象框以外的地方。</p>
+<hr>
+<h5 id="具体流程："><a href="#具体流程：" class="headerlink" title="具体流程："></a>具体流程：</h5><h5 id><a href="#" class="headerlink" title></a><img src="/2023/04/02/20-50-07/image-20230403213524550.png" alt="image-20230403213524550" style="zoom:50%;"><img src="/2023/04/02/20-50-07/image-20230403220326896.png" alt="image-20230403220326896"></h5><hr>
+<h3 id="实验设置"><a href="#实验设置" class="headerlink" title="实验设置"></a>实验设置</h3><h5 id="Dataset：FLIR-ADAS-dataset"><a href="#Dataset：FLIR-ADAS-dataset" class="headerlink" title="Dataset：FLIR ADAS dataset"></a>Dataset：FLIR ADAS dataset</h5><h5 id="Target-detector-YOLOv3"><a href="#Target-detector-YOLOv3" class="headerlink" title="Target detector:    YOLOv3"></a>Target detector:    YOLOv3</h5><h5 id="Metrics：ASR（攻击成功率）和AP（PR曲线下面的面积）"><a href="#Metrics：ASR（攻击成功率）和AP（PR曲线下面的面积）" class="headerlink" title="Metrics：ASR（攻击成功率）和AP（PR曲线下面的面积）"></a>Metrics：ASR（攻击成功率）和AP（PR曲线下面的面积）</h5><h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p><img src="/2023/04/02/20-50-07/image-20230403215238273.png" alt="image-20230403215238273" style="zoom:60%;"></p>
+<p>相比之前两种方法，本文的攻击AP达到了SOTA的效果，把原先检测器的100%AP降到12.05%。</p>
+<hr>
+<h5 id="消融实验："><a href="#消融实验：" class="headerlink" title="消融实验："></a>消融实验：</h5><h6 id="位置和形状的影响："><a href="#位置和形状的影响：" class="headerlink" title="位置和形状的影响："></a>位置和形状的影响：</h6><p><img src="/2023/04/02/20-50-07/image-20230403230428975.png" alt="image-20230403230428975" style="zoom:60%;"></p>
+<p><img src="/2023/04/02/20-50-07/image-20230403230510193.png" alt="image-20230403230510193" style="zoom:50%;"></p>
+<h6 id="损失函数的影响："><a href="#损失函数的影响：" class="headerlink" title="损失函数的影响："></a>损失函数的影响：</h6><p><img src="/2023/04/02/20-50-07/image-20230403231133217.png" alt="image-20230403231133217" style="zoom:50%;"></p>
+<p><img src="/2023/04/02/20-50-07/image-20230403230615465.png" alt="image-20230403230615465" style="zoom:50%;"></p>
+<p>约束聚合效果的Loss添加后虽然攻击性能下降了，但是这对于转换到物理世界的实施至关重要。</p>
+<hr>
+<h5 id="物理世界的攻击："><a href="#物理世界的攻击：" class="headerlink" title="物理世界的攻击："></a>物理世界的攻击：</h5><p>同样也达到了SOTA的效果：</p>
+<p><img src="/2023/04/02/20-50-07/image-20230403220244357.png" alt="image-20230403220244357"></p>
+<p><img src="/2023/04/02/20-50-07/image-20230403231323853.png" alt="image-20230403231323853" style="zoom:50%;"><img src="/2023/04/02/20-50-07/image-20230403231621541.png" alt="image-20230403231621541" style="zoom:50%;"></p>
+<p>但是本文的方法制作物理世界的红外贴片的时长花销是制作红外衣服的 $1/20$。</p>
+<h5 id="对于物理世界的车辆检测："><a href="#对于物理世界的车辆检测：" class="headerlink" title="对于物理世界的车辆检测："></a>对于物理世界的车辆检测：</h5><p><img src="/2023/04/02/20-50-07/image-20230403232034168.png" alt="image-20230403232034168" style="zoom:67%;"></p>
+<p>表明这种攻击可以应用到其他任务上。</p>
+<hr>
+<h3 id="防御红外对抗补丁"><a href="#防御红外对抗补丁" class="headerlink" title="防御红外对抗补丁"></a>防御红外对抗补丁</h3><ul>
+<li><p>空间平滑</p>
+</li>
+<li><p>随机添加噪声</p>
+</li>
+<li><p>对抗训练</p>
+<p><img src="/2023/04/02/20-50-07/image-20230403232241490.png" alt="image-20230403232241490" style="zoom:50%;"></p>
+</li>
+</ul>
+<p>像空间平滑，随机加噪这种防御方法针对这种攻击效果是极差的，因为这种聚合的且二值分明的补丁受这种平滑和一些扰动的影响是极小的。</p>
+<hr>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>本文提出了一种可以学习形状和位置的对抗性红外补丁，可以应用于物理世界的目标检测模型，通过隔热材料使模型失效，达到很高的攻击成功率，且极易容易制作，制作成本同时也很低。</p>
+]]></content>
+      <categories>
+        <category>论文阅读</category>
+        <category>对抗样本</category>
+      </categories>
+      <tags>
+        <tag>论文阅读</tag>
+        <tag>对抗样本</tag>
       </tags>
   </entry>
   <entry>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gin-zc.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"./public/search.xml"};
+  </script>
+
+  <meta name="description" content="《Physically Adversarial Infrared Patches with Learnable Shapes and Locations》CVPR 2023  一句话：针对红外目标检测场景，设计了一种对抗性红外补丁，通过隔热材料来改变目标热成像的图像，通过可学习的补丁形状和位置，进一步增加了物理世界攻击的可行性。    Motivation​        红外成像中的目标检测以其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Physically Adversarial Infrared Patches with Learnable Shapes and Locations》阅读笔记">
+<meta property="og:url" content="https://gin-zc.github.io/2023/04/02/20-50-07/index.html">
+<meta property="og:site_name" content="GIN">
+<meta property="og:description" content="《Physically Adversarial Infrared Patches with Learnable Shapes and Locations》CVPR 2023  一句话：针对红外目标检测场景，设计了一种对抗性红外补丁，通过隔热材料来改变目标热成像的图像，通过可学习的补丁形状和位置，进一步增加了物理世界攻击的可行性。    Motivation​        红外成像中的目标检测以其">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403165457032.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403175255441.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403175401024.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403195454965.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403205115813.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403213524550.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403220326896.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403215238273.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403230428975.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403230510193.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403231133217.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403230615465.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403220244357.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403231323853.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403231621541.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403232034168.png">
+<meta property="og:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403232241490.png">
+<meta property="article:published_time" content="2023-04-02T12:50:07.000Z">
+<meta property="article:modified_time" content="2023-04-03T15:30:32.866Z">
+<meta property="article:author" content="GIN">
+<meta property="article:tag" content="论文阅读">
+<meta property="article:tag" content="对抗样本">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gin-zc.github.io/2023/04/02/20-50-07/image-20230403165457032.png">
+
+<link rel="canonical" href="https://gin-zc.github.io/2023/04/02/20-50-07/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>《Physically Adversarial Infrared Patches with Learnable Shapes and Locations》阅读笔记 | GIN</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">GIN</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">7</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">8</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Gin-zc" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://gin-zc.github.io/2023/04/02/20-50-07/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="GIN">
+      <meta itemprop="description" content="USTC在读研究生">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GIN">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《Physically Adversarial Infrared Patches with Learnable Shapes and Locations》阅读笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-04-02 20:50:07" itemprop="dateCreated datePublished" datetime="2023-04-02T20:50:07+08:00">2023-04-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-03 23:30:32" itemprop="dateModified" datetime="2023-04-03T23:30:32+08:00">2023-04-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" itemprop="url" rel="index"><span itemprop="name">论文阅读</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC/" itemprop="url" rel="index"><span itemprop="name">对抗样本</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="《Physically-Adversarial-Infrared-Patches-with-Learnable-Shapes-and-Locations》"><a href="#《Physically-Adversarial-Infrared-Patches-with-Learnable-Shapes-and-Locations》" class="headerlink" title="《Physically Adversarial Infrared Patches with Learnable Shapes and Locations》"></a>《Physically Adversarial Infrared Patches with Learnable Shapes and Locations》</h2><h3 id="CVPR-2023"><a href="#CVPR-2023" class="headerlink" title="CVPR 2023"></a>CVPR 2023</h3><p><img src="/2023/04/02/20-50-07/image-20230403165457032.png" alt="image-20230403165457032" style="zoom:34%;"></p>
+<blockquote>
+<p>一句话：针对红外目标检测场景，设计了一种对抗性红外补丁，通过隔热材料来改变目标热成像的图像，通过可学习的补丁形状和位置，进一步增加了物理世界攻击的可行性。</p>
+</blockquote>
+<hr>
+<p><img src="/2023/04/02/20-50-07/image-20230403175255441.png" alt="image-20230403175255441" style="zoom:50%;"></p>
+<h3 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h3><p>​        红外成像中的目标检测以其在恶劣环境下具有较强的抗干扰性而著称，被广泛应用于安防监视、遥感等安全关键任务中。因此有必要对红外目标检测的物理对抗鲁棒性进行评估。以往的对抗攻击都是从RGB的角度产生的扰动，对红外相机来说是无法捕获到的。所以需要一种针对性的攻击方法。</p>
+<hr>
+<h3 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h3><p>现在也有一些相关工作：</p>
+<ul>
+<li>针对红外目标检测不可感知的对抗攻击，但是属于修改红外图像中的像素值而非物理世界的攻击。</li>
+<li>通过小灯泡来模拟热源，从而改变物体的红外辐射分布，来产生对抗扰动，但局限性很大，一个是不隐蔽且不容易实施，需要设计电路板来点亮小灯泡，第二是它是产生新的热源而不是隐蔽覆盖它们，受限于一些需要隐蔽热源的场景。</li>
+<li>通过穿上包裹全身的对抗性衣服，可以从不同角度去攻击探测器。具体操作是先设计2D的QR图案，然后转换成3D的衣服，最后将特殊红外材料贴到指定位置。总之攻击成本非常高和复杂。</li>
+</ul>
+<p><img src="/2023/04/02/20-50-07/image-20230403175401024.png" alt="image-20230403175401024" style="zoom:50%;"></p>
+<ul>
+<li><p>本文的方法是通过减少热辐射，而且只需要设计Patch的形状和位置即可达到攻击效果，有很强的隐蔽性。</p>
+<hr>
+<h3 id="Problem-Formuation"><a href="#Problem-Formuation" class="headerlink" title="Problem Formuation"></a>Problem Formuation</h3><h5 id="目标检测："><a href="#目标检测：" class="headerlink" title="目标检测："></a>目标检测：</h5><p>主要基于行人检测任务，对于所有的候选框 ${b_i \mid i=1, \ldots, n}$的置信度 ${s_i \mid i=1, \ldots, n}$，选择置信度最高的框作为最终目标，当大于一个阈值的时候算检测到行人。</p>
+<h5 id="攻击目标："><a href="#攻击目标：" class="headerlink" title="攻击目标："></a>攻击目标：</h5><p>最小化候选边框最大置信度的分数，使其低于检测阈值，从而检测不到行人。即最小化如下攻击损失：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{a t t a c k}\left(f\left(\boldsymbol{x}_{a d v}\right)\right)=\max _{i \in\{1, \ldots, n\}}\left(s_i\right)</script><h5 id="对抗样本的构建："><a href="#对抗样本的构建：" class="headerlink" title="对抗样本的构建："></a>对抗样本的构建：</h5><script type="math/tex; mode=display">
+\boldsymbol{x}_{a d v}=\boldsymbol{x} \odot(\mathbf{1}-\boldsymbol{M})+\hat{\boldsymbol{x}} \odot \boldsymbol{M}</script><p>其中 $\boldsymbol{M} \in{0,1}^{h \times w}$是用于约束隔热材料的形状和位置掩码，最开始的时候为了能优化设计了软 $\boldsymbol{M}$，范围是在 $[0,1]^{h \times w}$ 的连续值，最后不断优化接近 ${0,1}^{h \times w}$</p>
+<p>而 $\hat{\boldsymbol{x}}$表示隔热材料返回的热成像的像素值，但实际很难控制，这是很大程度取决于隔热材料的物理性质，热反射率等等，而通常整个Patch都是一样的材料，选定了材料就相当于确定了 $\hat{\boldsymbol{x}}$，基本整个图案都是相同的值，这里尽可能让它趋近于0，从而后续设计对抗样本只需要去优化 Mask的形状和位置。</p>
+<p><img src="/2023/04/02/20-50-07/image-20230403195454965.png" alt="image-20230403195454965" style="zoom:50%;"></p>
+<h5 id="MASK的优化目标："><a href="#MASK的优化目标：" class="headerlink" title="MASK的优化目标："></a>MASK的优化目标：</h5><p>利用梯度的优化来求解最优的的 $\boldsymbol{M}$</p>
+<ol>
+<li><p>$\boldsymbol{M}$中的像素应该尽可能聚集在一起。</p>
+</li>
+<li><p>$\boldsymbol{M}$中的像素值应该尽可能接近0和1。</p>
+<p><strong>这样可以使优化后MASK更好的设计隔热材料，从而转换到物理世界的攻击更容易实现。</strong></p>
+</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><h5 id="如何聚合-boldsymbol-M-​中的像素-："><a href="#如何聚合-boldsymbol-M-​中的像素-：" class="headerlink" title="如何聚合 $\boldsymbol{M}$​中的像素 ："></a>如何聚合 $\boldsymbol{M}$​中的像素 ：</h5><p>通过设计一个局部聚合系数去控制，优化使系数越大，也就意味着越聚合。</p>
+<script type="math/tex; mode=display">
+C_i=\frac{\mathcal{K} * \boldsymbol{A}_{3 \times 3}}{k_i\left(k_i-1\right)}=\frac{\mathcal{K} * \boldsymbol{A}_{3 \times 3}}{56}</script><p>对每个像素点都定义一个局部聚合系数 $C_i$，$\mathcal{K}$表示临接点的边数矩阵，$*$表示卷积操作。 $\boldsymbol{A}_{3 \times 3}$表示一个衰减因子矩阵，由 $\alpha_j$ 组成。</p>
+<script type="math/tex; mode=display">
+\alpha_j=V_j \times \frac{1}{\left|L_j\right|} \sum_{v_k \in L_j} V_k</script><p><img src="/2023/04/02/20-50-07/image-20230403205115813.png" alt="image-20230403205115813" style="zoom:40%;"></p>
+<p>最后得到整个 $\boldsymbol{M}$的聚合程度，表示为  $C(M) = \sum_{j=1}^h \sum_{k=1}^w C_{j k} \cdot M_{j k}$，优化使其最大。最小化Loss表示为：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{a g g}(\boldsymbol{M})=-C(\boldsymbol{M})=-\frac{1}{h w} \sum_{j=1}^h \sum_{k=1}^w C_{j k} \cdot M_{j k}</script><hr>
+<h5 id="如何二值化："><a href="#如何二值化：" class="headerlink" title="如何二值化："></a>如何二值化：</h5><p><strong>通过MSE约束：</strong></p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{M S E}(\mathcal{H}(\boldsymbol{M}), \boldsymbol{I})=\frac{1}{h w} \sum_{j=1}^h \sum_{k=1}^w\left(\mathcal{H}\left(M_{j k}\right)-1\right)^2</script><p>其中 $\boldsymbol{I}$为全1的矩阵， $\mathcal{H}(M_{jk})$是一个类似ReLU的函数，其中 $M_{jk}$小于阈值的时候置1，大于阈值的时候保持不变。这样可以只约束大于阈值的部分，从而更接近1。</p>
+<p>同时为了使 $\boldsymbol{M}$稀疏化，额外引入对它本身的一个L1约束。总的二值化损失为：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{\text {binary }}(\boldsymbol{M})=\|\boldsymbol{M}\|_1+\alpha \cdot \mathcal{L}_{M S E}(\mathcal{H}(\boldsymbol{M}), \boldsymbol{I})</script><p>因此最后整个Loss Function为：</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_{o b j}=\mathcal{L}_{a t t a c k}\left(f\left(\boldsymbol{x}_{a d v}\right)\right)+\lambda_1 \mathcal{L}_{\text {binary }}(\boldsymbol{M})+\lambda_2 \mathcal{L}_{a g g}</script><script type="math/tex; mode=display">
+\boldsymbol{M}^*=\arg \min _{\boldsymbol{M}} \mathcal{L}_{o b j}\left(f\left(\boldsymbol{x}_{a d v}\right)\right)</script><hr>
+<h5 id="通过带动量的梯度下降优化："><a href="#通过带动量的梯度下降优化：" class="headerlink" title="通过带动量的梯度下降优化："></a>通过带动量的梯度下降优化：</h5><script type="math/tex; mode=display">
+\begin{gathered}
+\boldsymbol{x}_{t+1}^{a d v}=\boldsymbol{x} \odot\left(1-\boldsymbol{M}_{t+1}\right)+\hat{\boldsymbol{x}} \odot \boldsymbol{M}_{t+1} \\\\
+\boldsymbol{M}_{t+1}=\left(\boldsymbol{M}_t-\epsilon \cdot g_{t+1}\right) \odot \boldsymbol{M}_{o b j} \\\\
+g_{t+1}=\mu \cdot g_t+\frac{\nabla_{\boldsymbol{M}} \mathcal{L}_{o b j}\left(f\left(\boldsymbol{x}_{a d v}\right), y ; \boldsymbol{M}_t\right)}{\left\|\nabla_{\boldsymbol{M}} \mathcal{L}_{o b j}\left(f\left(\boldsymbol{x}_{a d v}\right), y ; \boldsymbol{M}_t\right)\right\|_1}
+\end{gathered}</script><p>其中 $\boldsymbol{M}_{o b j}$是目标检测对象的原始定位的框的掩码，因为我们并不想优化目标对象框以外的地方。</p>
+<hr>
+<h5 id="具体流程："><a href="#具体流程：" class="headerlink" title="具体流程："></a>具体流程：</h5><h5 id><a href="#" class="headerlink" title></a><img src="/2023/04/02/20-50-07/image-20230403213524550.png" alt="image-20230403213524550" style="zoom:50%;"><img src="/2023/04/02/20-50-07/image-20230403220326896.png" alt="image-20230403220326896"></h5><hr>
+<h3 id="实验设置"><a href="#实验设置" class="headerlink" title="实验设置"></a>实验设置</h3><h5 id="Dataset：FLIR-ADAS-dataset"><a href="#Dataset：FLIR-ADAS-dataset" class="headerlink" title="Dataset：FLIR ADAS dataset"></a>Dataset：FLIR ADAS dataset</h5><h5 id="Target-detector-YOLOv3"><a href="#Target-detector-YOLOv3" class="headerlink" title="Target detector:    YOLOv3"></a>Target detector:    YOLOv3</h5><h5 id="Metrics：ASR（攻击成功率）和AP（PR曲线下面的面积）"><a href="#Metrics：ASR（攻击成功率）和AP（PR曲线下面的面积）" class="headerlink" title="Metrics：ASR（攻击成功率）和AP（PR曲线下面的面积）"></a>Metrics：ASR（攻击成功率）和AP（PR曲线下面的面积）</h5><h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p><img src="/2023/04/02/20-50-07/image-20230403215238273.png" alt="image-20230403215238273" style="zoom:60%;"></p>
+<p>相比之前两种方法，本文的攻击AP达到了SOTA的效果，把原先检测器的100%AP降到12.05%。</p>
+<hr>
+<h5 id="消融实验："><a href="#消融实验：" class="headerlink" title="消融实验："></a>消融实验：</h5><h6 id="位置和形状的影响："><a href="#位置和形状的影响：" class="headerlink" title="位置和形状的影响："></a>位置和形状的影响：</h6><p><img src="/2023/04/02/20-50-07/image-20230403230428975.png" alt="image-20230403230428975" style="zoom:60%;"></p>
+<p><img src="/2023/04/02/20-50-07/image-20230403230510193.png" alt="image-20230403230510193" style="zoom:50%;"></p>
+<h6 id="损失函数的影响："><a href="#损失函数的影响：" class="headerlink" title="损失函数的影响："></a>损失函数的影响：</h6><p><img src="/2023/04/02/20-50-07/image-20230403231133217.png" alt="image-20230403231133217" style="zoom:50%;"></p>
+<p><img src="/2023/04/02/20-50-07/image-20230403230615465.png" alt="image-20230403230615465" style="zoom:50%;"></p>
+<p>约束聚合效果的Loss添加后虽然攻击性能下降了，但是这对于转换到物理世界的实施至关重要。</p>
+<hr>
+<h5 id="物理世界的攻击："><a href="#物理世界的攻击：" class="headerlink" title="物理世界的攻击："></a>物理世界的攻击：</h5><p>同样也达到了SOTA的效果：</p>
+<p><img src="/2023/04/02/20-50-07/image-20230403220244357.png" alt="image-20230403220244357"></p>
+<p><img src="/2023/04/02/20-50-07/image-20230403231323853.png" alt="image-20230403231323853" style="zoom:50%;"><img src="/2023/04/02/20-50-07/image-20230403231621541.png" alt="image-20230403231621541" style="zoom:50%;"></p>
+<p>但是本文的方法制作物理世界的红外贴片的时长花销是制作红外衣服的 $1/20$。</p>
+<h5 id="对于物理世界的车辆检测："><a href="#对于物理世界的车辆检测：" class="headerlink" title="对于物理世界的车辆检测："></a>对于物理世界的车辆检测：</h5><p><img src="/2023/04/02/20-50-07/image-20230403232034168.png" alt="image-20230403232034168" style="zoom:67%;"></p>
+<p>表明这种攻击可以应用到其他任务上。</p>
+<hr>
+<h3 id="防御红外对抗补丁"><a href="#防御红外对抗补丁" class="headerlink" title="防御红外对抗补丁"></a>防御红外对抗补丁</h3><ul>
+<li><p>空间平滑</p>
+</li>
+<li><p>随机添加噪声</p>
+</li>
+<li><p>对抗训练</p>
+<p><img src="/2023/04/02/20-50-07/image-20230403232241490.png" alt="image-20230403232241490" style="zoom:50%;"></p>
+</li>
+</ul>
+<p>像空间平滑，随机加噪这种防御方法针对这种攻击效果是极差的，因为这种聚合的且二值分明的补丁受这种平滑和一些扰动的影响是极小的。</p>
+<hr>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>本文提出了一种可以学习形状和位置的对抗性红外补丁，可以应用于物理世界的目标检测模型，通过隔热材料使模型失效，达到很高的攻击成功率，且极易容易制作，制作成本同时也很低。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/" rel="tag"># 论文阅读</a>
+              <a href="/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC/" rel="tag"># 对抗样本</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/31/22-41-53/" rel="prev" title="hexo-bug">
+      <i class="fa fa-chevron-left"></i> hexo-bug
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E3%80%8APhysically-Adversarial-Infrared-Patches-with-Learnable-Shapes-and-Locations%E3%80%8B"><span class="nav-number">1.</span> <span class="nav-text">《Physically Adversarial Infrared Patches with Learnable Shapes and Locations》</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CVPR-2023"><span class="nav-number">1.1.</span> <span class="nav-text">CVPR 2023</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Motivation"><span class="nav-number">1.2.</span> <span class="nav-text">Motivation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Related-Work"><span class="nav-number">1.3.</span> <span class="nav-text">Related Work</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Problem-Formuation"><span class="nav-number">1.4.</span> <span class="nav-text">Problem Formuation</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%EF%BC%9A"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">目标检测：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%94%BB%E5%87%BB%E7%9B%AE%E6%A0%87%EF%BC%9A"><span class="nav-number">1.4.0.2.</span> <span class="nav-text">攻击目标：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%9A%84%E6%9E%84%E5%BB%BA%EF%BC%9A"><span class="nav-number">1.4.0.3.</span> <span class="nav-text">对抗样本的构建：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#MASK%E7%9A%84%E4%BC%98%E5%8C%96%E7%9B%AE%E6%A0%87%EF%BC%9A"><span class="nav-number">1.4.0.4.</span> <span class="nav-text">MASK的优化目标：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Method"><span class="nav-number">1.5.</span> <span class="nav-text">Method</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%81%9A%E5%90%88-boldsymbol-M-%E2%80%8B%E4%B8%AD%E7%9A%84%E5%83%8F%E7%B4%A0-%EF%BC%9A"><span class="nav-number">1.5.0.1.</span> <span class="nav-text">如何聚合 $\boldsymbol{M}$​中的像素 ：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BA%8C%E5%80%BC%E5%8C%96%EF%BC%9A"><span class="nav-number">1.5.0.2.</span> <span class="nav-text">如何二值化：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E5%B8%A6%E5%8A%A8%E9%87%8F%E7%9A%84%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%BC%98%E5%8C%96%EF%BC%9A"><span class="nav-number">1.5.0.3.</span> <span class="nav-text">通过带动量的梯度下降优化：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="nav-number">1.5.0.4.</span> <span class="nav-text">具体流程：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link"><span class="nav-number">1.5.0.5.</span> <span class="nav-text"></span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.6.</span> <span class="nav-text">实验设置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Dataset%EF%BC%9AFLIR-ADAS-dataset"><span class="nav-number">1.6.0.1.</span> <span class="nav-text">Dataset：FLIR ADAS dataset</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Target-detector-YOLOv3"><span class="nav-number">1.6.0.2.</span> <span class="nav-text">Target detector:    YOLOv3</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Metrics%EF%BC%9AASR%EF%BC%88%E6%94%BB%E5%87%BB%E6%88%90%E5%8A%9F%E7%8E%87%EF%BC%89%E5%92%8CAP%EF%BC%88PR%E6%9B%B2%E7%BA%BF%E4%B8%8B%E9%9D%A2%E7%9A%84%E9%9D%A2%E7%A7%AF%EF%BC%89"><span class="nav-number">1.6.0.3.</span> <span class="nav-text">Metrics：ASR（攻击成功率）和AP（PR曲线下面的面积）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">1.7.</span> <span class="nav-text">实验结果</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C%EF%BC%9A"><span class="nav-number">1.7.0.1.</span> <span class="nav-text">消融实验：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%BD%8D%E7%BD%AE%E5%92%8C%E5%BD%A2%E7%8A%B6%E7%9A%84%E5%BD%B1%E5%93%8D%EF%BC%9A"><span class="nav-number">1.7.0.1.1.</span> <span class="nav-text">位置和形状的影响：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E7%9A%84%E5%BD%B1%E5%93%8D%EF%BC%9A"><span class="nav-number">1.7.0.1.2.</span> <span class="nav-text">损失函数的影响：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E4%B8%96%E7%95%8C%E7%9A%84%E6%94%BB%E5%87%BB%EF%BC%9A"><span class="nav-number">1.7.0.2.</span> <span class="nav-text">物理世界的攻击：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E%E7%89%A9%E7%90%86%E4%B8%96%E7%95%8C%E7%9A%84%E8%BD%A6%E8%BE%86%E6%A3%80%E6%B5%8B%EF%BC%9A"><span class="nav-number">1.7.0.3.</span> <span class="nav-text">对于物理世界的车辆检测：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B2%E5%BE%A1%E7%BA%A2%E5%A4%96%E5%AF%B9%E6%8A%97%E8%A1%A5%E4%B8%81"><span class="nav-number">1.8.</span> <span class="nav-text">防御红外对抗补丁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">1.9.</span> <span class="nav-text">结论</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="GIN"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">GIN</p>
+  <div class="site-description" itemprop="description">USTC在读研究生</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Gin-zc" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Gin-zc" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:czhang_10@mail.ustc.edu.cn" title="E-Mail → mailto:czhang_10@mail.ustc.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love" id="heart">
+    <i class="fa fa-heartbeat" aria-hidden="true"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">GIN</span>
+</div>
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+-->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
